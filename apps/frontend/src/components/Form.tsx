@@ -7,16 +7,23 @@ import { BACKEND_URL } from "../lib/config";
 
 export function Form(){
   const [github , setgithub]= useState("")
-  const [linkedin, setlinkedin] = useState("")
+  
 
   async function onSubmit(){
-    if(!github|| !linkedin){
-      toast("Please provide valid git hub and linkedin urls")
+    if(!github){
+      toast("Please provide a valid GitHub url")
       return ;
     }
 
-    await axios.post(`${BACKEND_URL}/api/v1/pre-interview`, { github, linkedin })
- 
+    try {
+      toast("Submitting GitHub URL to backend...")
+      const response = await axios.post(`${BACKEND_URL}/api/v1/pre-interview`, { github })
+      toast("Success! Profile details fetched.")
+      console.log("Backend response data:", response.data);
+    } catch (error: any) {
+      toast.error(`Error: ${error.message || "Failed to connect to backend"}`)
+      console.error("Form submission failed:", error);
+    }
   }
 
     return (
@@ -26,10 +33,7 @@ export function Form(){
             AI Interviewer Kickstart
           </h2>
           <div className="p-4">
-            <Input onChange={(e) =>setlinkedin(e.target.value)} placeholder="LinkedIn Url" className="p-4"/>
-          </div>
-          <div className="p-4">
-            <Input onChange={(e) =>setgithub(e.target.value)} placeholder="Git Hub Url" className="p-4"/>
+            <Input onChange={(e) =>setgithub(e.target.value)} placeholder="GitHub Url" className="p-4"/>
           </div>
           <div className="flex justify-center">
             <Button onClick={onSubmit}>Start Interview</Button>
