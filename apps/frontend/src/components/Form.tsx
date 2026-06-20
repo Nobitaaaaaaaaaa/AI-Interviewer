@@ -4,9 +4,12 @@ import { Input } from "./ui/input";
 import {toast} from "sonner"
 import axios from "axios"
 import { BACKEND_URL } from "../lib/config";
+import { useNavigate } from "react-router";
 
 export function Form(){
   const [github , setgithub]= useState("")
+  const [loading , setloading] = useState(false)
+  const navigate = useNavigate()
   
 
   async function onSubmit(){
@@ -14,16 +17,19 @@ export function Form(){
       toast("Please provide a valid GitHub url")
       return ;
     }
+    setloading(true)
 
     try {
       toast("Submitting GitHub URL to backend...")
       const response = await axios.post(`${BACKEND_URL}/api/v1/pre-interview`, { github })
       toast("Success! Profile details fetched.")
-      console.log("Backend response data:", response.data);
+      
+      navigate(`/interview/${response.data.id}`)
     } catch (error: any) {
       toast.error(`Error: ${error.message || "Failed to connect to backend"}`)
       console.error("Form submission failed:", error);
     }
+    setloading(false)
   }
 
     return (
@@ -36,7 +42,9 @@ export function Form(){
             <Input onChange={(e) =>setgithub(e.target.value)} placeholder="GitHub Url" className="p-4"/>
           </div>
           <div className="flex justify-center">
-            <Button onClick={onSubmit}>Start Interview</Button>
+            <Button disabled={loading} onClick={onSubmit}>
+              {loading ? "Submitting..." : "Start Interview"}
+            </Button>
           </div>
        </div>
 
