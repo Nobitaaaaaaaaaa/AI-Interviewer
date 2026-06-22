@@ -3,7 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun --hot index.ts"
+    "dev": "bun --hot index.ts",
+    "build": "prisma generate",
+    "start": "bun index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
