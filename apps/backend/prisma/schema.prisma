@@ -14,6 +14,7 @@ model Interview {
   score          Int               @default(0)
 
   conversations  Message[]
+  feedback       String?
 }
 
 model Message {
@@ -23,6 +24,7 @@ model Message {
 
   interviewId String
   interview   Interview        @relation(fields: [interviewId], references: [id])
+  createdAt   DateTime         @default(now())
 }
 
 enum InterviewStatus {
